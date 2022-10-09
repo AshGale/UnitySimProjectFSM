@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-public class Moving : Grounded
+public class Fligt : Moving
 {
     private CreatureSM _sm;
     private float _horizontalInput;
 
-    public Moving(CreatureSM stateMachine) : base("Moving", stateMachine) {
+    public Fligt(CreatureSM stateMachine) : base(stateMachine) {
         _sm = (CreatureSM)this.stateMachine;
     }
 
@@ -22,6 +22,7 @@ public class Moving : Grounded
         base.UpdateLogic();
         _horizontalInput = Input.GetAxis("Horizontal");
 
+
         if (Mathf.Abs(_horizontalInput) < Mathf.Epsilon) {
             stateMachine.ChangeState(base._sm.idleState);
         } else {
@@ -37,10 +38,17 @@ public class Moving : Grounded
     public override void UpdatePhysics()
     {
         base.UpdatePhysics();
-        
+
         Vector2 vel = base._sm.rigidbody.velocity;
         vel.x = _horizontalInput * ((CreatureSM)stateMachine).speed;
         base._sm.rigidbody.velocity = vel;
+
+        if (_grounded) {
+             stateMachine.ChangeState(_sm.idleState);
+        } else {
+            if (Input.GetKeyDown(KeyCode.Space))
+            stateMachine.ChangeState(_sm.slamState);
+        }
     }
 
 }

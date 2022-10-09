@@ -28,6 +28,8 @@ public class CreatureSM : StateMachine
     public Idle idleState;
     [HideInInspector]
     public Moving movingState;
+        [HideInInspector]
+    public Fligt flightState;
     [HideInInspector]
     public Jumping jumpingState;
     [HideInInspector]
@@ -44,6 +46,7 @@ public class CreatureSM : StateMachine
     {
         idleState = new Idle(this);
         movingState = new Moving(this);
+        flightState = new Fligt(this);
         jumpingState = new Jumping(this);
         slamState = new Slam(this);
 

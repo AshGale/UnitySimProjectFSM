@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
 
 //state that is when energy hits 0
-public class Exausted : BaseState
+public class Exausted : Grounded
 {
     private CreatureSM _sm;
-
-    private bool _grounded;
-    private int _groundLayer = 1 << 6;
 
     public Exausted(CreatureSM stateMachine) : base("Exausted", stateMachine)
     {
@@ -41,7 +38,6 @@ public class Exausted : BaseState
     {
         //ensure touching the ground
         base.UpdatePhysics();
-        _grounded = _sm.rigidbody.velocity.y < Mathf.Epsilon && _sm.rigidbody.IsTouchingLayers(_groundLayer);
     }
 
 }

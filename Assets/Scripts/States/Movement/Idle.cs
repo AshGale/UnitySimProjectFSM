@@ -10,7 +10,7 @@ public class Idle : Grounded
     {
         base.Enter();
         Debug.Log(this.name);
-        sm.spriteRenderer.color = Color.black;
+        _sm.spriteRenderer.color = Color.black;
         _horizontalInput = 0f;
     }
 
@@ -20,13 +20,13 @@ public class Idle : Grounded
         _horizontalInput = Input.GetAxis("Horizontal");
 
         if (Mathf.Abs(_horizontalInput) > Mathf.Epsilon) {
-            stateMachine.ChangeState(sm.movingState);
+            stateMachine.ChangeState(_sm.movingState);
         } else {
             //When there is no movement, check if you can rest
             if(_grounded) {
-                if (sm.currentEnergy < sm.maxEnergy) {
+                if (_sm.currentEnergy < _sm.maxEnergy) {
                     Debug.Log("Resting");
-                    stateMachine.ChangeState(sm.restingState);
+                    stateMachine.ChangeState(_sm.restingState);
                     // sm.currentEnergy += sm.restEnergy;
                     // sm.spriteRenderer.color = Color.yellow;
                 } else {
@@ -34,7 +34,7 @@ public class Idle : Grounded
                     // sm.spriteRenderer.color = Color.black;
                 }
             } else {
-                Debug.Log("In the Air still, but Idle");
+                //Debug.Log("In the Air still, but Idle");
                 // sm.spriteRenderer.color = Color.black;
             }           
         } 

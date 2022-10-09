@@ -2,8 +2,6 @@
 
 public class Resting : Grounded
 {
-    //depricated delete
-
     private CreatureSM _sm;
 
 

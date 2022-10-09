@@ -1,15 +1,16 @@
-﻿using UnityEngine;
+﻿using System.Diagnostics;
+using UnityEngine;
 
 public class Grounded : BaseState
 {
-    protected CreatureSM sm;
+    protected CreatureSM _sm;
 
     public bool _grounded;
     private int _groundLayer = 1 << 6;
 
     public Grounded(string name, CreatureSM stateMachine) : base(name, stateMachine)
     {
-        sm = (CreatureSM) this.stateMachine;
+        _sm = (CreatureSM) this.stateMachine;
     }
 
     public override void UpdateLogic()
@@ -19,11 +20,11 @@ public class Grounded : BaseState
         CheckIfGrounded();
 
         if (_grounded && Input.GetKeyDown(KeyCode.Space)) {
-            stateMachine.ChangeState(sm.jumpingState);
+            stateMachine.ChangeState(_sm.jumpingState);
         }            
     }
 
     public void CheckIfGrounded() {
-        _grounded =  sm.rigidbody.velocity.y < Mathf.Epsilon && sm.rigidbody.IsTouchingLayers(_groundLayer);
+        _grounded =  _sm.rigidbody.velocity.y < Mathf.Epsilon && _sm.rigidbody.IsTouchingLayers(_groundLayer);
     }
 }
