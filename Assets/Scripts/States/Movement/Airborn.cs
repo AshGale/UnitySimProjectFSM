@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 
-public class Moving : Grounded
+public class Airborn : AirbornCheck
 {
     private CreatureSM _sm;
     private float _horizontalInput;
 
-    public Moving(string name, CreatureSM stateMachine) : base("Moving", stateMachine) {
+    public Airborn(string name, CreatureSM stateMachine) : base("Airborn", stateMachine)
+    {
         _sm = (CreatureSM)this.stateMachine;
     }
 
@@ -13,27 +14,23 @@ public class Moving : Grounded
     {
         base.Enter();
         Debug.Log(this.name);
-        base._sm.spriteRenderer.color = Color.grey;
-        _horizontalInput = 0f;
     }
 
     public override void UpdateLogic()
     {
         base.UpdateLogic();
+        if(!_sm._slamming && Input.GetKeyDown(KeyCode.Space)) {
+            _sm._slamming = true;
+            base._sm.ChangeState(base._sm.slamingState); 
+        }     
+
         _horizontalInput = Input.GetAxis("Horizontal");
 
         if (Mathf.Abs(_horizontalInput) < Mathf.Epsilon) {
+            //didn't move
             stateMachine.ChangeState(base._sm.idleState);
+        } else {
+            base._sm.ChangeState(base._sm.flyingState);
         }
-    }
-
-    public override void UpdatePhysics()
-    {
-        base.UpdatePhysics();
-        
-        Vector2 vel = base._sm.rigidbody.velocity;
-        vel.x = _horizontalInput * ((CreatureSM)stateMachine).speed;
-        base._sm.rigidbody.velocity = vel;
-    }
-
+    }   
 }

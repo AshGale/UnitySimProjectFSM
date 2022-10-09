@@ -7,6 +7,9 @@ This is essentially the player controller
 */
 public class CreatureSM : StateMachine
 {
+    public bool _jumping = false;
+    public bool _slamming = false;
+
     public float speed = 4f;
     public float jumpForce = 6f;
     public float moveCost = 0.01f;
@@ -24,35 +27,35 @@ public class CreatureSM : StateMachine
     public Rigidbody2D rigidbody;
     public SpriteRenderer spriteRenderer;
 
+    
+    [HideInInspector]
+    public Airborn airbornState;
+    [HideInInspector]
+    public AirbornCheck airbornCheckState;
+    [HideInInspector]
+    public Flying flyingState;
+    [HideInInspector]
+    public Grounded groundedState;
     [HideInInspector]
     public Idle idleState;
     [HideInInspector]
-    public Moving movingState;
-        [HideInInspector]
-    public Fligt flightState;
-    [HideInInspector]
     public Jumping jumpingState;
     [HideInInspector]
-    public Slam slamState;
+    public Moving movingState;
+    [HideInInspector]
+    public Slaming slamingState;
 
-    [HideInInspector]
-    public Exausted exaustedState;
-    [HideInInspector]
-    public Resting restingState;
-    [HideInInspector]
-    public Steady steadyState;
 
     private void Awake()
     {
+        airbornState = new Airborn("", this);
+        airbornCheckState = new AirbornCheck("", this);
+        flyingState = new Flying("", this);
+        groundedState = new Grounded("", this);
         idleState = new Idle(this);
-        movingState = new Moving(this);
-        flightState = new Fligt(this);
-        jumpingState = new Jumping(this);
-        slamState = new Slam(this);
-
-        exaustedState = new Exausted(this);
-        restingState = new Resting(this);
-        steadyState = new Steady(this);
+        jumpingState = new Jumping("", this);
+        movingState = new Moving("", this);
+        slamingState = new Slaming("", this);
     }
 
     protected override BaseState GetInitialState()

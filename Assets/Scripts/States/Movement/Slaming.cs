@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 
-public class Moving : Grounded
+public class Slaming : Airborn
 {
     private CreatureSM _sm;
     private float _horizontalInput;
 
-    public Moving(string name, CreatureSM stateMachine) : base("Moving", stateMachine) {
+    public Slaming(string name, CreatureSM stateMachine) : base("Slaming", stateMachine) 
+    {
         _sm = (CreatureSM)this.stateMachine;
     }
 
@@ -13,8 +14,7 @@ public class Moving : Grounded
     {
         base.Enter();
         Debug.Log(this.name);
-        base._sm.spriteRenderer.color = Color.grey;
-        _horizontalInput = 0f;
+        _sm.spriteRenderer.color = Color.magenta;
     }
 
     public override void UpdateLogic()
@@ -24,16 +24,18 @@ public class Moving : Grounded
 
         if (Mathf.Abs(_horizontalInput) < Mathf.Epsilon) {
             stateMachine.ChangeState(base._sm.idleState);
-        }
+        } else {
+            //might need to add for seamless jumping moving ?
+            //base._sm.ChangeState(base._sm.movingState)
+        }         
     }
 
     public override void UpdatePhysics()
     {
         base.UpdatePhysics();
-        
-        Vector2 vel = base._sm.rigidbody.velocity;
-        vel.x = _horizontalInput * ((CreatureSM)stateMachine).speed;
-        base._sm.rigidbody.velocity = vel;
+        Vector2 vel = _sm.rigidbody.velocity;
+        vel.y -= _sm.jumpForce;
+        _sm.rigidbody.velocity = vel;
     }
 
 }

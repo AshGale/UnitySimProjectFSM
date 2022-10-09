@@ -1,30 +1,37 @@
-﻿using System.Diagnostics;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Grounded : BaseState
+public class Grounded : AirbornCheck
 {
-    protected CreatureSM _sm;
+    private CreatureSM _sm;
+    private float _horizontalInput;
 
-    public bool _grounded;
-    private int _groundLayer = 1 << 6;
-
-    public Grounded(string name, CreatureSM stateMachine) : base(name, stateMachine)
+    public Grounded(string name, CreatureSM stateMachine) : base("Grounded", stateMachine)
     {
-        _sm = (CreatureSM) this.stateMachine;
+        _sm = (CreatureSM)this.stateMachine;
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+        Debug.Log(this.name);
+        base._sm.spriteRenderer.color = Color.green;
     }
 
     public override void UpdateLogic()
     {
         base.UpdateLogic();
+        if(!_sm._jumping && !_sm._slamming && Input.GetKeyDown(KeyCode.Space)) {
+            _sm._jumping = true;
+            base._sm.ChangeState(base._sm.jumpingState);           
+        }     
 
-        CheckIfGrounded();
+        _horizontalInput = Input.GetAxis("Horizontal");
 
-        if (_grounded && Input.GetKeyDown(KeyCode.Space)) {
-            stateMachine.ChangeState(_sm.jumpingState);
-        }            
-    }
-
-    public void CheckIfGrounded() {
-        _grounded =  _sm.rigidbody.velocity.y < Mathf.Epsilon && _sm.rigidbody.IsTouchingLayers(_groundLayer);
+        if (Mathf.Abs(_horizontalInput) < Mathf.Epsilon) {
+            //didn't move
+            stateMachine.ChangeState(base._sm.idleState);
+        } else {
+            base._sm.ChangeState(base._sm.movingState);
+        }
     }
 }
